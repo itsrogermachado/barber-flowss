@@ -76,9 +76,9 @@ const ClientAppointments = ({ shopSlug }: ClientAppointmentsProps) => {
     }
 
     toast.success('Agendamento cancelado!');
-    fetchAppointments(clean);
 
-    // Redirect to WhatsApp with cancellation message after a brief delay
+    // Build WhatsApp URL before any state update
+    let whatsappUrl = '';
     if (result?.shop_whatsapp) {
       const dateStr = format(new Date(result.start_at), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR });
       const msg = encodeURIComponent(
@@ -89,10 +89,16 @@ const ClientAppointments = ({ shopSlug }: ClientAppointmentsProps) => {
         `👤 Cliente: ${result.client_name}\n` +
         `Obrigado!`
       );
-      const whatsappUrl = `https://wa.me/55${result.shop_whatsapp}?text=${msg}`;
+      whatsappUrl = `https://wa.me/55${result.shop_whatsapp}?text=${msg}`;
+    }
+
+    fetchAppointments(clean);
+
+    // Redirect after brief delay to allow UI update
+    if (whatsappUrl) {
       setTimeout(() => {
         window.location.href = whatsappUrl;
-      }, 300);
+      }, 500);
     }
   };
 
