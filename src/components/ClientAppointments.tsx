@@ -89,7 +89,7 @@ const ClientAppointments = ({ shopSlug }: ClientAppointmentsProps) => {
         `👤 Cliente: ${result.client_name}\n` +
         `Obrigado!`
       );
-      window.open(`https://wa.me/55${result.shop_whatsapp}?text=${msg}`, '_blank');
+      window.location.href = `https://wa.me/55${result.shop_whatsapp}?text=${msg}`;
     }
   };
 
