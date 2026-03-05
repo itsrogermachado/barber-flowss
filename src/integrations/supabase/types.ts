@@ -526,6 +526,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cancel_appointment_by_client: {
+        Args: { _appointment_id: string; _client_whatsapp: string }
+        Returns: Json
+      }
       create_appointment: {
         Args: {
           _barber_choice: string
@@ -549,6 +553,10 @@ export type Database = {
           _service_id: string
           _shop_slug: string
         }
+        Returns: Json
+      }
+      get_client_appointments: {
+        Args: { _client_whatsapp: string; _shop_slug: string }
         Returns: Json
       }
       get_user_barber_id: {
