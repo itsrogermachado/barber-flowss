@@ -21,6 +21,7 @@ import ShopPublic from "./pages/ShopPublic";
 import BookingWizard from "./pages/BookingWizard";
 import BookingConfirmation from "./pages/BookingConfirmation";
 import InviteAccept from "./pages/InviteAccept";
+import SuperAdmin from "./pages/SuperAdmin";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +41,7 @@ const App = () => (
             <Route path="/s/:slug" element={<ShopPublic />} />
             <Route path="/s/:slug/agendar" element={<BookingWizard />} />
             <Route path="/s/:slug/confirmacao" element={<BookingConfirmation />} />
+            <Route path="/super-admin" element={<SuperAdmin />} />
 
             {/* Onboarding */}
             <Route path="/onboarding" element={<Onboarding />} />
