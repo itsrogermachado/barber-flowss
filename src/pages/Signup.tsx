@@ -10,7 +10,6 @@ import { toast } from 'sonner';
 const Signup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [shopName, setShopName] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -42,10 +41,10 @@ const Signup = () => {
     }
 
     if (authData.user) {
-      const slug = generateSlug(shopName || 'barbearia');
+      const slug = generateSlug('barbearia');
       const { error: shopError } = await supabase.rpc('create_shop_for_user', {
         _user_id: authData.user.id,
-        _shop_name: shopName || 'Minha Barbearia',
+        _shop_name: 'Minha Barbearia',
         _slug: slug,
       });
 
@@ -66,14 +65,10 @@ const Signup = () => {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-bold text-primary font-['Space_Grotesk']">BarberFlow</CardTitle>
-          <CardDescription>Crie sua conta e configure sua barbearia</CardDescription>
+          <CardDescription>Crie sua conta em segundos — você configura tudo depois</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSignup} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="shopName">Nome da barbearia</Label>
-              <Input id="shopName" placeholder="Ex: Barbearia do João" value={shopName} onChange={e => setShopName(e.target.value)} required />
-            </div>
             <div className="space-y-2">
               <Label htmlFor="email">E-mail</Label>
               <Input id="email" type="email" placeholder="seu@email.com" value={email} onChange={e => setEmail(e.target.value)} required />
