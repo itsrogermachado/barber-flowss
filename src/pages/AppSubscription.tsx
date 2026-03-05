@@ -52,7 +52,7 @@ const AppSubscription = () => {
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Agendamentos/mês</span>
-                    <span className="font-medium">{limits.max_appointments_month}</span>
+                    <span className="font-medium">Ilimitado</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Lembretes WhatsApp</span>
