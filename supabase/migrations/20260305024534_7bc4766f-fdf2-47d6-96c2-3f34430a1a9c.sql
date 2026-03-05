@@ -1,0 +1,1 @@
+CREATE POLICY "Public can view appointment by id" ON public.appointments FOR SELECT USING (true);

@@ -84,10 +84,13 @@ const AppAgenda = () => {
               <Card key={a.id}>
                 <CardContent className="p-4 space-y-2">
                   <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-semibold">{format(new Date(a.start_at), 'HH:mm')} — {a.client_name}</p>
-                      <p className="text-sm text-muted-foreground">{a.services?.name} · {a.barbers?.name}</p>
-                      <p className="text-xs text-muted-foreground">{a.client_whatsapp}</p>
+                    <div className="space-y-1">
+                      <p className="font-semibold">{format(new Date(a.start_at), 'HH:mm')} – {format(new Date(a.end_at), 'HH:mm')} · {a.client_name}</p>
+                      <p className="text-sm text-muted-foreground">{a.services?.name} · {a.services?.price_cents ? (a.services.price_cents / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : ''}</p>
+                      <p className="text-sm text-muted-foreground">Barbeiro: {a.barbers?.name}</p>
+                      <p className="text-xs text-muted-foreground">📱 {a.client_whatsapp}</p>
+                      {a.notes && <p className="text-xs text-muted-foreground italic">📝 {a.notes}</p>}
+                      <p className="text-xs text-muted-foreground">Código: {a.id.slice(0, 8)}</p>
                     </div>
                     <span className={`text-xs font-medium ${statusColor(a.status)}`}>{statusLabel(a.status)}</span>
                   </div>
