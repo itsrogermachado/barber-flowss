@@ -42,6 +42,21 @@ const AppAgenda = () => {
 
   useEffect(() => { load(); }, [date, shopId]);
 
+  // Realtime: listen for appointment changes
+  useEffect(() => {
+    if (!shopId) return;
+    const channel = supabase
+      .channel('agenda-realtime')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'appointments', filter: `shop_id=eq.${shopId}` },
+        () => { load(); }
+      )
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [shopId, date]);
+
   const filtered = appointments.filter(a =>
     !search || a.client_name.toLowerCase().includes(search.toLowerCase()) || a.client_whatsapp.includes(search)
   );
