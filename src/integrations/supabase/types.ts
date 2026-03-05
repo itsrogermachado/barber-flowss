@@ -268,6 +268,51 @@ export type Database = {
         }
         Relationships: []
       }
+      reviews: {
+        Row: {
+          appointment_id: string
+          client_name: string
+          comment: string | null
+          created_at: string | null
+          id: string
+          rating: number
+          shop_id: string
+        }
+        Insert: {
+          appointment_id: string
+          client_name: string
+          comment?: string | null
+          created_at?: string | null
+          id?: string
+          rating: number
+          shop_id: string
+        }
+        Update: {
+          appointment_id?: string
+          client_name?: string
+          comment?: string | null
+          created_at?: string | null
+          id?: string
+          rating?: number
+          shop_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_appointment_id_fkey"
+            columns: ["appointment_id"]
+            isOneToOne: true
+            referencedRelation: "appointments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_shop_id_fkey"
+            columns: ["shop_id"]
+            isOneToOne: false
+            referencedRelation: "shops"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       services: {
         Row: {
           created_at: string | null

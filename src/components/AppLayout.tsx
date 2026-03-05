@@ -1,6 +1,7 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Calendar, Home, Scissors, Users, Clock, Ban, Settings, CreditCard, UserPlus, LogOut, Menu, X } from 'lucide-react';
+import ThemeToggle from '@/components/ThemeToggle';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
@@ -36,9 +37,12 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
       {/* Mobile header */}
       <header className="sticky top-0 z-50 flex items-center justify-between border-b bg-card px-4 py-3 lg:hidden">
         <Link to="/app" className="text-xl font-bold font-['Space_Grotesk'] text-primary">BarberFlow</Link>
-        <Button variant="ghost" size="icon" onClick={() => setMenuOpen(!menuOpen)}>
-          {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </Button>
+        <div className="flex items-center gap-1">
+          <ThemeToggle />
+          <Button variant="ghost" size="icon" onClick={() => setMenuOpen(!menuOpen)}>
+            {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </Button>
+        </div>
       </header>
 
       {/* Mobile menu */}
@@ -89,8 +93,9 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
               </Link>
             ))}
           </nav>
-          <div className="p-3 border-t">
-            <button onClick={handleSignOut} className="flex w-full items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-medium text-destructive hover:bg-secondary">
+          <div className="p-3 border-t flex items-center justify-between">
+            <ThemeToggle />
+            <button onClick={handleSignOut} className="flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-medium text-destructive hover:bg-secondary">
               <LogOut className="h-4 w-4" />
               Sair
             </button>

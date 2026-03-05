@@ -7,6 +7,7 @@ import {
   ChevronRight, Star, Check, ArrowRight, Zap
 } from 'lucide-react';
 import heroImage from '@/assets/hero-barbershop.jpg';
+import ThemeToggle from '@/components/ThemeToggle';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -75,7 +76,8 @@ const Index = () => {
             <a href="#planos" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Planos</a>
             <a href="#depoimentos" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Depoimentos</a>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
             <Link to="/login">
               <Button variant="ghost" size="sm">Entrar</Button>
             </Link>
