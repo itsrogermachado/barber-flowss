@@ -14,6 +14,7 @@ interface AuthContextType {
   session: Session | null;
   user: User | null;
   membership: Membership | null;
+  isSuperAdmin: boolean;
   loading: boolean;
   signOut: () => Promise<void>;
   refreshMembership: () => Promise<void>;
@@ -23,6 +24,7 @@ const AuthContext = createContext<AuthContextType>({
   session: null,
   user: null,
   membership: null,
+  isSuperAdmin: false,
   loading: true,
   signOut: async () => {},
   refreshMembership: async () => {},
@@ -34,6 +36,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [membership, setMembership] = useState<Membership | null>(null);
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const fetchMembership = async (userId: string) => {
@@ -46,6 +49,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setMembership(data as unknown as Membership);
   };
 
+  const checkSuperAdmin = async () => {
+    const { data } = await supabase.rpc('is_super_admin');
+    setIsSuperAdmin(!!data);
+  };
+
   const refreshMembership = async () => {
     if (user) await fetchMembership(user.id);
   };
@@ -55,9 +63,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
-        setTimeout(() => fetchMembership(session.user.id), 0);
+        setTimeout(() => {
+          fetchMembership(session.user.id);
+          checkSuperAdmin();
+        }, 0);
       } else {
         setMembership(null);
+        setIsSuperAdmin(false);
       }
       setLoading(false);
     });
@@ -67,6 +79,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(session?.user ?? null);
       if (session?.user) {
         fetchMembership(session.user.id);
+        checkSuperAdmin();
       }
       setLoading(false);
     });
@@ -79,10 +92,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setSession(null);
     setUser(null);
     setMembership(null);
+    setIsSuperAdmin(false);
   };
 
   return (
-    <AuthContext.Provider value={{ session, user, membership, loading, signOut, refreshMembership }}>
+    <AuthContext.Provider value={{ session, user, membership, isSuperAdmin, loading, signOut, refreshMembership }}>
       {children}
     </AuthContext.Provider>
   );
