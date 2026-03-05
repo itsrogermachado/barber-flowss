@@ -4,10 +4,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
   Calendar, Scissors, Users, Clock, Smartphone, Shield,
-  ChevronRight, Star, Check, ArrowRight, Zap
+  ChevronRight, Star, Check, ArrowRight, Zap, MessageCircle,
+  ChevronDown
 } from 'lucide-react';
 import heroImage from '@/assets/hero-barbershop.jpg';
 import ThemeToggle from '@/components/ThemeToggle';
+import { useState } from 'react';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -23,7 +25,14 @@ const features = [
   { icon: Clock, title: 'Horários Inteligentes', desc: 'Configure expediente, intervalos e bloqueios por barbeiro automaticamente.' },
   { icon: Smartphone, title: 'Página Pública', desc: 'Sua barbearia ganha uma página profissional para compartilhar com clientes.' },
   { icon: Users, title: 'Multi-usuários', desc: 'Convide administradores e barbeiros com permissões diferentes.' },
-  { icon: Shield, title: 'Controle Total', desc: 'Dashboard completo com visão de agendamentos, serviços e equipe.' },
+  { icon: Shield, title: 'Controle Total', desc: 'Dashboard completo com métricas, gráficos e visão geral do negócio.' },
+];
+
+const steps = [
+  { num: '01', title: 'Crie sua conta', desc: 'Cadastre-se em menos de 2 minutos e configure sua barbearia.' },
+  { num: '02', title: 'Configure serviços e equipe', desc: 'Adicione seus serviços, preços e barbeiros com horários de trabalho.' },
+  { num: '03', title: 'Compartilhe seu link', desc: 'Envie o link da sua página pública para seus clientes via WhatsApp ou redes sociais.' },
+  { num: '04', title: 'Receba agendamentos', desc: 'Clientes agendam online e você gerencia tudo pelo painel.' },
 ];
 
 const plans = [
@@ -32,7 +41,7 @@ const plans = [
     price: 'R$ 0',
     period: '/14 dias',
     desc: 'Teste tudo sem compromisso',
-    features: ['1 barbeiro', '30 agendamentos/mês', 'Página pública', 'Gestão básica'],
+    features: ['1 barbeiro', 'Agendamentos ilimitados', 'Página pública', 'Gestão básica'],
     cta: 'Começar grátis',
     highlighted: false,
   },
@@ -41,7 +50,7 @@ const plans = [
     price: 'R$ 49',
     period: '/mês',
     desc: 'Para barbearias em crescimento',
-    features: ['Até 5 barbeiros', '500 agendamentos/mês', 'Página personalizada', 'Lembretes WhatsApp', 'Relatórios'],
+    features: ['Até 5 barbeiros', 'Agendamentos ilimitados', 'Página personalizada', 'Lembretes WhatsApp', 'Relatórios e métricas'],
     cta: 'Assinar agora',
     highlighted: true,
   },
@@ -62,6 +71,30 @@ const testimonials = [
   { name: 'Roberto Lima', role: 'Dono da RL Barber', text: 'Minha equipe de 4 barbeiros usa todo dia. A organização melhorou 100% e não temos mais conflitos de horário.', rating: 5 },
 ];
 
+const faqs = [
+  { q: 'Preciso de cartão de crédito para testar?', a: 'Não! O período de teste de 14 dias é totalmente gratuito, sem necessidade de cartão.' },
+  { q: 'Meus clientes precisam baixar algum app?', a: 'Não. Eles agendam direto pelo navegador do celular, sem baixar nada. É só clicar no link.' },
+  { q: 'Posso cancelar a qualquer momento?', a: 'Sim, você pode cancelar sua assinatura quando quiser, sem multa ou fidelidade.' },
+  { q: 'Funciona para barbeiro autônomo?', a: 'Com certeza! O plano gratuito é perfeito para quem trabalha sozinho.' },
+  { q: 'Como meus clientes vão agendar?', a: 'Você recebe um link exclusivo da sua barbearia (ex: barberflow.app/s/sua-barbearia) para compartilhar no WhatsApp, Instagram, etc.' },
+];
+
+const FaqItem = ({ q, a }: { q: string; a: string }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border-b border-border/50 last:border-0">
+      <button
+        className="flex w-full items-center justify-between py-4 text-left text-sm font-medium hover:text-primary transition-colors"
+        onClick={() => setOpen(!open)}
+      >
+        {q}
+        <ChevronDown className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+      {open && <p className="pb-4 text-sm text-muted-foreground leading-relaxed">{a}</p>}
+    </div>
+  );
+};
+
 const Index = () => {
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
@@ -73,8 +106,9 @@ const Index = () => {
           </Link>
           <div className="hidden md:flex items-center gap-8">
             <a href="#funcionalidades" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Funcionalidades</a>
+            <a href="#como-funciona" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Como funciona</a>
             <a href="#planos" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Planos</a>
-            <a href="#depoimentos" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Depoimentos</a>
+            <a href="#faq" className="text-sm text-muted-foreground hover:text-foreground transition-colors">FAQ</a>
           </div>
           <div className="flex items-center gap-2">
             <ThemeToggle />
@@ -118,14 +152,14 @@ const Index = () => {
                   Começar grátis <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
-              <a href="#funcionalidades">
+              <a href="#como-funciona">
                 <Button variant="outline" size="lg" className="h-13 px-8 text-base w-full sm:w-auto">
-                  Ver funcionalidades
+                  Como funciona
                 </Button>
               </a>
             </motion.div>
             <motion.p variants={fadeUp} custom={4} className="text-xs text-muted-foreground">
-              ✓ 14 dias grátis &nbsp; ✓ Sem cartão de crédito &nbsp; ✓ Cancele quando quiser
+              ✓ 14 dias grátis &nbsp; ✓ Sem cartão de crédito &nbsp; ✓ Agendamentos ilimitados
             </motion.p>
           </motion.div>
         </div>
@@ -158,8 +192,31 @@ const Index = () => {
         </div>
       </section>
 
+      {/* How it works */}
+      <section id="como-funciona" className="py-24">
+        <div className="mx-auto max-w-6xl px-4">
+          <motion.div className="text-center mb-16" initial="hidden" whileInView="visible" viewport={{ once: true }}>
+            <motion.p variants={fadeUp} custom={0} className="text-sm font-medium text-primary mb-2">COMO FUNCIONA</motion.p>
+            <motion.h2 variants={fadeUp} custom={1} className="text-3xl md:text-4xl font-bold font-['Space_Grotesk']">
+              4 passos para começar
+            </motion.h2>
+          </motion.div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {steps.map((s, i) => (
+              <motion.div key={s.num} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} variants={fadeUp} className="text-center space-y-3">
+                <div className="mx-auto h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center">
+                  <span className="text-xl font-bold text-primary font-['Space_Grotesk']">{s.num}</span>
+                </div>
+                <h3 className="font-semibold font-['Space_Grotesk']">{s.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Testimonials */}
-      <section id="depoimentos" className="py-24">
+      <section id="depoimentos" className="py-24 bg-card/50">
         <div className="mx-auto max-w-6xl px-4">
           <motion.div className="text-center mb-16" initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <motion.p variants={fadeUp} custom={0} className="text-sm font-medium text-primary mb-2">DEPOIMENTOS</motion.p>
@@ -191,7 +248,7 @@ const Index = () => {
       </section>
 
       {/* Plans */}
-      <section id="planos" className="py-24 bg-card/50">
+      <section id="planos" className="py-24">
         <div className="mx-auto max-w-6xl px-4">
           <motion.div className="text-center mb-16" initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <motion.p variants={fadeUp} custom={0} className="text-sm font-medium text-primary mb-2">PLANOS</motion.p>
@@ -238,6 +295,25 @@ const Index = () => {
         </div>
       </section>
 
+      {/* FAQ */}
+      <section id="faq" className="py-24 bg-card/50">
+        <div className="mx-auto max-w-2xl px-4">
+          <motion.div className="text-center mb-12" initial="hidden" whileInView="visible" viewport={{ once: true }}>
+            <motion.p variants={fadeUp} custom={0} className="text-sm font-medium text-primary mb-2">FAQ</motion.p>
+            <motion.h2 variants={fadeUp} custom={1} className="text-3xl md:text-4xl font-bold font-['Space_Grotesk']">
+              Perguntas frequentes
+            </motion.h2>
+          </motion.div>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0}>
+            <Card className="border-border/50">
+              <CardContent className="p-6">
+                {faqs.map(f => <FaqItem key={f.q} q={f.q} a={f.a} />)}
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="py-24">
         <div className="mx-auto max-w-6xl px-4">
@@ -269,14 +345,35 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border/50 py-8">
-        <div className="mx-auto max-w-6xl px-4 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} BarberFlow. Todos os direitos reservados.
-          </p>
-          <div className="flex items-center gap-6">
-            <Link to="/login" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Entrar</Link>
-            <Link to="/signup" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Criar conta</Link>
+      <footer className="border-t border-border/50 py-10">
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="grid sm:grid-cols-3 gap-8">
+            <div className="space-y-3">
+              <p className="text-xl font-bold font-['Space_Grotesk'] text-primary">BarberFlow</p>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Sistema de agendamento online feito para barbearias que querem crescer.
+              </p>
+            </div>
+            <div className="space-y-3">
+              <p className="text-sm font-semibold">Produto</p>
+              <div className="flex flex-col gap-2">
+                <a href="#funcionalidades" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Funcionalidades</a>
+                <a href="#planos" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Planos</a>
+                <a href="#faq" className="text-sm text-muted-foreground hover:text-foreground transition-colors">FAQ</a>
+              </div>
+            </div>
+            <div className="space-y-3">
+              <p className="text-sm font-semibold">Conta</p>
+              <div className="flex flex-col gap-2">
+                <Link to="/login" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Entrar</Link>
+                <Link to="/signup" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Criar conta</Link>
+              </div>
+            </div>
+          </div>
+          <div className="mt-8 pt-6 border-t border-border/50 text-center">
+            <p className="text-xs text-muted-foreground">
+              © {new Date().getFullYear()} BarberFlow. Todos os direitos reservados.
+            </p>
           </div>
         </div>
       </footer>
