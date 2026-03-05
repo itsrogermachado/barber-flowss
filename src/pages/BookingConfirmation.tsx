@@ -3,8 +3,9 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Check, Copy, MessageCircle } from 'lucide-react';
+import { Check, Copy, MessageCircle, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
+import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
@@ -97,6 +98,11 @@ const BookingConfirmation = () => {
           <Button variant="outline" className="w-full h-12" onClick={copyMessage}>
             <Copy className="mr-2 h-4 w-4" />Copiar mensagem
           </Button>
+          <Link to={`/s/${slug}`} className="w-full">
+            <Button variant="ghost" className="w-full h-12">
+              <ArrowLeft className="mr-2 h-4 w-4" />Voltar à barbearia
+            </Button>
+          </Link>
         </div>
       </div>
     </div>
