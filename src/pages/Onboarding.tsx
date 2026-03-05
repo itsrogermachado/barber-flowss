@@ -13,10 +13,11 @@ import { Plus, Trash2, Check } from 'lucide-react';
 const WEEKDAYS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
 
 const Onboarding = () => {
-  const { membership, refreshMembership } = useAuth();
+  const { user, membership, refreshMembership } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const totalSteps = 5;
+  const [creatingShop, setCreatingShop] = useState(false);
 
   // Step 1: Shop info
   const [shopName, setShopName] = useState('');
@@ -38,6 +39,29 @@ const Onboarding = () => {
   const [workingHours, setWorkingHours] = useState<Record<string, { enabled: boolean; start: string; end: string; breakStart: string; breakEnd: string }[]>>({});
 
   const shopId = membership?.shop_id;
+
+  // Auto-create shop if user has no membership
+  useEffect(() => {
+    const createShopIfNeeded = async () => {
+      if (user && !membership && !creatingShop) {
+        setCreatingShop(true);
+        const randomSlug = 'barbearia-' + Math.random().toString(36).slice(2, 8);
+        const { error } = await supabase.rpc('create_shop_for_user', {
+          _user_id: user.id,
+          _shop_name: 'Minha Barbearia',
+          _slug: randomSlug,
+        });
+        if (error) {
+          toast.error('Erro ao criar barbearia. Tente recarregar a página.');
+          setCreatingShop(false);
+          return;
+        }
+        await refreshMembership();
+        setCreatingShop(false);
+      }
+    };
+    createShopIfNeeded();
+  }, [user, membership]);
 
   useEffect(() => {
     if (membership?.shops) {
@@ -160,6 +184,25 @@ const Onboarding = () => {
     toast.success('Barbearia publicada! 🎉');
     navigate('/app');
   };
+
+  if (!user) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <p className="text-muted-foreground">Você precisa estar logado. <a href="/login" className="text-primary underline">Fazer login</a></p>
+      </div>
+    );
+  }
+
+  if (!membership || creatingShop) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="text-center space-y-4">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent mx-auto" />
+          <p className="text-muted-foreground">Preparando sua barbearia...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background px-4 py-8">
