@@ -25,6 +25,7 @@ import InviteAccept from "./pages/InviteAccept";
 import SuperAdmin from "./pages/SuperAdmin";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import ReviewSubmit from "./pages/ReviewSubmit";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -46,6 +47,7 @@ const App = () => (
             <Route path="/s/:slug" element={<ShopPublic />} />
             <Route path="/s/:slug/agendar" element={<BookingWizard />} />
             <Route path="/s/:slug/confirmacao" element={<BookingConfirmation />} />
+            <Route path="/s/:slug/avaliar/:appointmentId" element={<ReviewSubmit />} />
             <Route path="/super-admin" element={<SuperAdmin />} />
 
             {/* Onboarding */}
