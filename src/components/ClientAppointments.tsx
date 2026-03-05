@@ -3,10 +3,11 @@ import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Search, CalendarDays, XCircle } from 'lucide-react';
+import { Search, CalendarDays, XCircle, History } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,6 +30,7 @@ const ClientAppointments = ({ shopSlug }: ClientAppointmentsProps) => {
   const [searched, setSearched] = useState(false);
   const [cancelId, setCancelId] = useState<string | null>(null);
   const [cancelling, setCancelling] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
 
   const fetchAppointments = async (wpp: string) => {
     if (wpp.replace(/\D/g, '').length < 10) return;
@@ -77,7 +79,6 @@ const ClientAppointments = ({ shopSlug }: ClientAppointmentsProps) => {
 
     toast.success('Agendamento cancelado!');
 
-    // Build WhatsApp URL before any state update
     let whatsappUrl = '';
     if (result?.shop_whatsapp) {
       const dateStr = format(new Date(result.start_at), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR });
@@ -94,15 +95,22 @@ const ClientAppointments = ({ shopSlug }: ClientAppointmentsProps) => {
 
     fetchAppointments(clean);
 
-    // Redirect after brief delay to allow UI update
     if (whatsappUrl) {
       setTimeout(() => {
-        window.location.href = whatsappUrl;
+        window.open(whatsappUrl, '_blank');
       }, 500);
     }
   };
 
   const formatPrice = (cents: number) => (cents / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+  const now = new Date();
+  const futureAppointments = appointments.filter(a => new Date(a.start_at) > now && a.status === 'confirmed');
+  const pastAppointments = appointments.filter(a => new Date(a.start_at) <= now || a.status !== 'confirmed');
+
+  const statusLabel = (s: string) => ({ confirmed: 'Confirmado', completed: 'Concluído', no_show: 'Faltou', cancelled: 'Cancelado' }[s] || s);
+  const statusVariant = (s: string): 'default' | 'secondary' | 'destructive' | 'outline' =>
+    ({ completed: 'default' as const, confirmed: 'secondary' as const, cancelled: 'destructive' as const, no_show: 'outline' as const }[s] || 'secondary');
 
   return (
     <section>
@@ -132,13 +140,13 @@ const ClientAppointments = ({ shopSlug }: ClientAppointmentsProps) => {
         </div>
       )}
 
-      {!loading && searched && appointments.length === 0 && (
+      {!loading && searched && futureAppointments.length === 0 && (
         <p className="text-sm text-muted-foreground text-center py-4">Nenhum agendamento futuro encontrado.</p>
       )}
 
-      {!loading && appointments.length > 0 && (
+      {!loading && futureAppointments.length > 0 && (
         <div className="space-y-3">
-          {appointments.map((a: any) => (
+          {futureAppointments.map((a: any) => (
             <Card key={a.id}>
               <CardContent className="p-4 space-y-2">
                 <div className="flex items-start justify-between">
@@ -162,6 +170,43 @@ const ClientAppointments = ({ shopSlug }: ClientAppointmentsProps) => {
               </CardContent>
             </Card>
           ))}
+        </div>
+      )}
+
+      {/* History */}
+      {!loading && searched && pastAppointments.length > 0 && (
+        <div className="mt-6">
+          <Button
+            variant="ghost"
+            className="w-full justify-start gap-2 text-muted-foreground"
+            onClick={() => setShowHistory(!showHistory)}
+          >
+            <History className="h-4 w-4" />
+            Histórico ({pastAppointments.length})
+          </Button>
+
+          {showHistory && (
+            <div className="space-y-3 mt-3">
+              {pastAppointments.map((a: any) => (
+                <Card key={a.id} className="opacity-70">
+                  <CardContent className="p-4 space-y-1">
+                    <div className="flex items-start justify-between">
+                      <div className="space-y-1">
+                        <p className="font-semibold text-sm">
+                          {format(new Date(a.start_at), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {a.service_name} · {formatPrice(a.price_cents)}
+                        </p>
+                        <p className="text-sm text-muted-foreground">💈 {a.barber_name}</p>
+                      </div>
+                      <Badge variant={statusVariant(a.status)}>{statusLabel(a.status)}</Badge>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
