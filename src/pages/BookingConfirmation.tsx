@@ -40,7 +40,7 @@ const BookingConfirmation = () => {
 
   const openWhatsapp = () => {
     if (shop?.phone_whatsapp) {
-      window.location.href = `https://wa.me/55${shop.phone_whatsapp}?text=${encodeURIComponent(message)}`;
+      window.open(`https://wa.me/55${shop.phone_whatsapp}?text=${encodeURIComponent(message)}`, '_blank');
     }
   };
 
