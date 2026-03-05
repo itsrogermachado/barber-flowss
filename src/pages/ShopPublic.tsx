@@ -14,7 +14,7 @@ const ShopPublic = () => {
   useEffect(() => {
     const load = async () => {
       const { data: shopData } = await supabase.from('shops').select('*').eq('slug', slug).eq('is_published', true).single();
-      if (shopData) {
+      if (shopData && !shopData.is_suspended) {
         setShop(shopData);
         const { data: svcData } = await supabase.from('services').select('*').eq('shop_id', shopData.id).eq('is_active', true).order('sort_order');
         setServices(svcData || []);

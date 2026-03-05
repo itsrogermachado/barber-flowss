@@ -316,6 +316,7 @@ export type Database = {
           id: string
           instagram: string | null
           is_published: boolean | null
+          is_suspended: boolean | null
           name: string
           onboarding_completed: boolean | null
           phone_whatsapp: string | null
@@ -332,6 +333,7 @@ export type Database = {
           id?: string
           instagram?: string | null
           is_published?: boolean | null
+          is_suspended?: boolean | null
           name?: string
           onboarding_completed?: boolean | null
           phone_whatsapp?: string | null
@@ -348,6 +350,7 @@ export type Database = {
           id?: string
           instagram?: string | null
           is_published?: boolean | null
+          is_suspended?: boolean | null
           name?: string
           onboarding_completed?: boolean | null
           phone_whatsapp?: string | null
