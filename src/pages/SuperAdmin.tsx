@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import {
   Copy, ExternalLink, Store, Users, Scissors, Calendar,
-  Search, ShieldCheck, Link2, LogOut, Trash2, EyeOff, Eye
+  Search, ShieldCheck, Link2, LogOut, Trash2, EyeOff, Eye, Ban, CheckCircle
 } from 'lucide-react';
 
 const SuperAdmin = () => {
@@ -92,6 +92,23 @@ const SuperAdmin = () => {
       const { error } = await supabase.from('shops').update({ is_published: !currentlyPublished }).eq('id', shopId);
       if (error) { toast.error('Erro: ' + error.message); return; }
       toast.success(currentlyPublished ? 'Barbearia despublicada!' : 'Barbearia publicada!');
+      await loadData();
+    } catch (e) {
+      toast.error('Erro inesperado.');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const toggleSuspend = async (shopId: string, currentlySuspended: boolean) => {
+    setActionLoading(shopId);
+    try {
+      const { error } = await supabase.from('shops').update({ 
+        is_suspended: !currentlySuspended,
+        is_published: currentlySuspended ? undefined : false 
+      } as any).eq('id', shopId);
+      if (error) { toast.error('Erro: ' + error.message); return; }
+      toast.success(!currentlySuspended ? 'Barbearia suspensa!' : 'Barbearia reativada!');
       await loadData();
     } catch (e) {
       toast.error('Erro inesperado.');
@@ -216,6 +233,9 @@ const SuperAdmin = () => {
                         <p className="text-sm text-muted-foreground font-mono">/{shop.slug}</p>
                       </div>
                       <div className="flex items-center gap-2">
+                        {shop.is_suspended && (
+                          <Badge variant="destructive">Suspensa</Badge>
+                        )}
                         <Badge variant={shop.is_published ? 'default' : 'secondary'}>
                           {shop.is_published ? 'Publicada' : 'Rascunho'}
                         </Badge>
@@ -258,6 +278,13 @@ const SuperAdmin = () => {
                         onClick={() => togglePublish(shop.id, shop.is_published)}
                       >
                         {shop.is_published ? <><EyeOff className="mr-1 h-3 w-3" />Despublicar</> : <><Eye className="mr-1 h-3 w-3" />Publicar</>}
+                      </Button>
+                      <Button
+                        variant={shop.is_suspended ? 'outline' : 'secondary'}
+                        size="sm"
+                        onClick={() => toggleSuspend(shop.id, !!shop.is_suspended)}
+                      >
+                        {shop.is_suspended ? <><CheckCircle className="mr-1 h-3 w-3" />Reativar</> : <><Ban className="mr-1 h-3 w-3" />Suspender</>}
                       </Button>
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
