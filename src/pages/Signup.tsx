@@ -33,7 +33,11 @@ const Signup = () => {
 
     if (authError) {
       setLoading(false);
-      toast.error('Erro ao criar conta. Tente novamente.');
+      if (authError.message?.includes('already registered') || authError.status === 422) {
+        toast.error('Esse e-mail já está cadastrado. Faça login.');
+      } else {
+        toast.error('Erro ao criar conta. Tente novamente.');
+      }
       return;
     }
 

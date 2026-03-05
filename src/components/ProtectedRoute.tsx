@@ -19,7 +19,7 @@ const ProtectedRoute = ({ children, requiredRoles }: Props) => {
 
   if (!user) return <Navigate to="/login" replace />;
 
-  if (!membership) return <Navigate to="/signup" replace />;
+  if (!membership) return <Navigate to="/onboarding" replace />;
 
   if (!membership.shops?.onboarding_completed) {
     return <Navigate to="/onboarding" replace />;
