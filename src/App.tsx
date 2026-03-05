@@ -23,6 +23,8 @@ import BookingWizard from "./pages/BookingWizard";
 import BookingConfirmation from "./pages/BookingConfirmation";
 import InviteAccept from "./pages/InviteAccept";
 import SuperAdmin from "./pages/SuperAdmin";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,6 +40,8 @@ const App = () => (
             {/* Public */}
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/invite" element={<InviteAccept />} />
             <Route path="/s/:slug" element={<ShopPublic />} />
             <Route path="/s/:slug/agendar" element={<BookingWizard />} />
