@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { MapPin, Phone, Instagram, Clock, Scissors, Star, MessageCircle, Users } from 'lucide-react';
+import ClientAppointments from '@/components/ClientAppointments';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
@@ -167,6 +168,9 @@ const ShopPublic = () => {
             </Card>
           </section>
         )}
+
+        {/* Client Appointments */}
+        <ClientAppointments shopSlug={slug!} />
 
         {/* Reviews */}
         {reviews.length > 0 && (
