@@ -89,14 +89,14 @@ const BookingConfirmation = () => {
         </Card>
 
         <div className="space-y-3">
+          {shop?.phone_whatsapp && (
+            <Button className="w-full h-14 text-lg bg-green-600 hover:bg-green-700 text-white" onClick={openWhatsapp}>
+              <MessageCircle className="mr-2 h-5 w-5" />Enviar no WhatsApp
+            </Button>
+          )}
           <Button variant="outline" className="w-full h-12" onClick={copyMessage}>
             <Copy className="mr-2 h-4 w-4" />Copiar mensagem
           </Button>
-          {shop?.phone_whatsapp && (
-            <Button className="w-full h-12" onClick={openWhatsapp}>
-              <MessageCircle className="mr-2 h-4 w-4" />Abrir WhatsApp
-            </Button>
-          )}
         </div>
       </div>
     </div>
