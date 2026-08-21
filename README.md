@@ -4,6 +4,7 @@ SaaS multi-inquilino de agendamento para barbearias, construído em **React + Ty
 sobre **Supabase**. Cada barbearia tem sua própria página pública de agendamento,
 sua equipe, seus serviços e seu plano.
 
+![CI](https://github.com/itsrogermachado/barber-flowss/actions/workflows/ci.yml/badge.svg)
 ![React](https://img.shields.io/badge/-React-20232A?style=flat-square&logo=react)
 ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
 ![Supabase](https://img.shields.io/badge/-Supabase-3FCF8E?style=flat-square&logo=supabase&logoColor=white)
