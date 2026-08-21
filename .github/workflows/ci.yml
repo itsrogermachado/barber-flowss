@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configura Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Instala dependencias
+        run: npm ci
+
+      - name: Testes unitarios
+        run: npm run test
+
+      - name: Build de producao
+        run: npm run build
+        env:
+          VITE_SUPABASE_URL: https://exemplo.supabase.co
+          VITE_SUPABASE_PROJECT_ID: exemplo
+          VITE_SUPABASE_PUBLISHABLE_KEY: chave-ficticia-para-build
